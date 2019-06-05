@@ -14,7 +14,7 @@ go get -u github.com/jinzhu/gorm
 在本地mysql数据库中进行实验  
 首先创建一个database：try_gorm  
 #### main.js
-```
+```go
 package main
 
 import (
@@ -44,7 +44,7 @@ func main() {
 仔细阅读了一下文档没有任何线索  
 于是硬着头皮看了一下[官方文档]，发现了 Advanced Topics > Logger 这一页  
 #### main.js > func main()
-```
+```go
 func main() {
 	connStr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true&loc=Local",
 		"root", "123", "127.0.0.1", 3306, "try_gorm")
@@ -59,7 +59,7 @@ func main() {
 ```
 再执行，这下看到Error了：重复的列id!? 在日志显示的建表语句中发现了两个id!? why?  
 最终发现在gorm.Model中已经定给出了4个字段：  
-```
+```go
 type Model struct {
 	ID        uint `gorm:"primary_key"`
 	CreatedAt time.Time
@@ -69,7 +69,7 @@ type Model struct {
 ```
 所以
 #### main.js > type User struct
-```
+```go
 type User struct {
 	ID         uint
 	Name       string
@@ -79,7 +79,7 @@ type User struct {
 再执行，检查数据库，发现了表users!?  
 自动变复数，厉害了，但是洒家不乐意。  
 #### main.js > func main()
-```
+```go
 func main() {
 	connStr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true&loc=Local",
 		"root", "123", "127.0.0.1", 3306, "try_gorm")
@@ -97,17 +97,17 @@ func main() {
 就很棒，但是洒家不乐意，偏要搞UUID。
 于是
 #### main.js > type User struct
-```
+```go
 type User struct {
 	ID         string
 	Name       string
 	CreateTime *time.Time
 }
 ```
-执行又报错了，也是哈，没指定长度让元芳怎么看。
+执行又报错了，也是哈，没指定长度让元芳怎么看。  
 于是
 #### main.js > type User struct
-```
+```go
 type User struct {
 	ID         string `gorm:"size:50"`
 	Name       string
